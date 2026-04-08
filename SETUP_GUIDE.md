@@ -17,22 +17,6 @@ cp .env.example .env
 
 ## 可选配置
 
-### 安装 Playwright（推荐）
-
-Playwright 用于采集 JS 渲染的页面（Mixpanel、Amplitude），可以获得更好的采集效果。
-
-```bash
-# 安装 Playwright
-pip install playwright
-
-# 安装浏览器（仅需 Chromium）
-playwright install chromium
-```
-
-**不安装的影响：**
-- Mixpanel 和 Amplitude 的采集可能失败或数据不完整
-- PostHog 和神策数据不受影响（使用 RSS）
-
 ### 配置飞书多维表格同步
 
 如果需要将数据同步到飞书多维表格，需要完成以下配置：
@@ -140,12 +124,6 @@ python app.py
 
 ## 验证配置
 
-### 检查 Playwright 是否可用
-
-```bash
-python -c "from playwright.sync_api import sync_playwright; print('Playwright is available')"
-```
-
 ### 测试数据采集
 
 ```bash
@@ -167,11 +145,12 @@ python test_changelog_collectors.py
    - RSS feed 可能暂时不可用
 
 2. **Mixpanel/Amplitude 采集失败**
-   - 安装 Playwright：`pip install playwright && playwright install chromium`
+   - 检查网络连接
    - 检查页面 URL 是否变化
+   - 查看控制台错误信息
 
 3. **神策数据采集失败**
-   - 检查 CSDN RSS 是否可访问
+   - 检查官方博客是否可访问
    - 可能需要配置代理
 
 ### 飞书同步失败

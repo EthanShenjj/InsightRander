@@ -55,23 +55,11 @@ python app.py
 
 ## 详细配置指南
 
-如需配置飞书同步或安装 Playwright，请查看 [配置指南](SETUP_GUIDE.md)。
+如需配置飞书同步，请查看 [配置指南](SETUP_GUIDE.md)。
 
 **快速链接：**
-- [安装 Playwright](SETUP_GUIDE.md#安装-playwright推荐) - 用于采集 Mixpanel 和 Amplitude
 - [配置飞书同步](SETUP_GUIDE.md#配置飞书多维表格同步) - 将数据同步到飞书多维表格
 - [故障排查](SETUP_GUIDE.md#故障排查) - 常见问题解决方案
-
-## 高级功能：Playwright 支持
-
-对于 JS 渲染的页面（如 Mixpanel、Amplitude），可以安装 Playwright 获得更好的采集效果：
-
-```bash
-pip install playwright
-playwright install chromium
-```
-
-安装后，系统会自动使用 Playwright 采集这些页面。
 
 ## 数据采集源
 
@@ -81,13 +69,13 @@ playwright install chromium
 - 内容：博客文章、产品更新
 
 ### Mixpanel
-- Releases: https://mixpanel.com/releases/
-- 采集方式：Playwright（推荐）或 BeautifulSoup
+- Changelog: https://docs.mixpanel.com/changelogs
+- 采集方式：BeautifulSoup
 - 内容：产品发布、功能更新
 
 ### Amplitude
-- Product Updates: https://community.amplitude.com/product-updates
-- 采集方式：Playwright（推荐）或 BeautifulSoup
+- Releases: https://amplitude.com/releases
+- 采集方式：BeautifulSoup
 - 内容：产品更新、新功能
 
 ## 飞书多维表格配置
@@ -115,7 +103,7 @@ InsightRadar/
 ├── collectors/                     # 数据采集器
 │   ├── base.py                    # 基础采集器
 │   ├── changelog_scrapers.py      # Changelog 采集器
-│   ├── playwright_scrapers.py     # Playwright 采集器
+│   ├── sensorsdata.py             # 神策数据采集器
 │   ├── rss.py                     # RSS 采集器
 │   └── github.py                  # GitHub 采集器
 ├── routes/                         # API 路由
@@ -152,7 +140,7 @@ python test_changelog_collectors.py
 
 - Backend: Flask + SQLAlchemy
 - Frontend: Vanilla JavaScript
-- 数据采集: BeautifulSoup + Playwright + feedparser
+- 数据采集: BeautifulSoup + feedparser
 - 数据库: SQLite（默认）/ PostgreSQL
 - 集成: 飞书多维表格 API
 

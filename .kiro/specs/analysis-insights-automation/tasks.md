@@ -8,15 +8,15 @@
 
 ## 任务列表
 
-- [ ] 1. 扩展数据模型和数据库迁移
+- [x] 1. 扩展数据模型和数据库迁移
   - 在 models.py 中添加 DataSourceHealth 模型用于监控数据源健康状态
   - 在 models.py 中添加 TaskExecutionLog 模型用于记录任务执行历史
   - 为 ProductUpdate 表添加性能优化索引（product+publish_time, update_type+publish_time, tags GIN 索引）
   - 创建数据库迁移脚本或使用 db.create_all() 应用新模型
   - _需求: 11.2, 11.4, 9.5_
 
-- [ ] 2. 实现 LLM 分析服务核心
-  - [ ] 2.1 创建 services/llm_analyzer.py 实现 LLMAnalyzer 类
+- [-] 2. 实现 LLM 分析服务核心
+  - [x] 2.1 创建 services/llm_analyzer.py 实现 LLMAnalyzer 类
     - 实现 __init__ 方法，从环境变量加载 OpenAI 兼容 API 配置
     - 实现 _call_llm 内部方法，包含重试逻辑（最多 2 次，间隔 1 分钟）和错误处理
     - 实现 classify_content 方法，使用 LLM 将内容分类为 feature/bug/ai/pricing/strategy
@@ -32,8 +32,8 @@
     - 使用 Mock 测试 API 调用和重试逻辑
     - _需求: 2.5, 3.6, 4.5, 10.5_
 
-- [ ] 3. 实现社交媒体数据采集器
-  - [ ] 3.1 创建 collectors/social.py 实现 SocialMediaCollector 类
+- [-] 3. 实现社交媒体数据采集器
+  - [x] 3.1 创建 collectors/social.py 实现 SocialMediaCollector 类
     - 继承 BaseCollector，实现 collect 方法
     - 实现 _collect_from_tavily 方法，调用 Tavily API 进行快速洞察
     - 实现 _collect_from_apify 方法，调用 Apify API 进行深度抓取
@@ -49,8 +49,8 @@
     - 测试数据去重逻辑
     - _需求: 1.6, 1.7_
 
-- [ ] 4. 实现内容分析服务
-  - [ ] 4.1 创建 services/classifier.py 实现 ContentClassifier 类
+- [-] 4. 实现内容分析服务
+  - [x] 4.1 创建 services/classifier.py 实现 ContentClassifier 类
     - 实现 classify_update 方法，为单条 ProductUpdate 分类
     - 实现 classify_batch 方法，批量分类更新
     - 调用 LLMAnalyzer.classify_content，更新 ProductUpdate.update_type 字段
@@ -58,7 +58,7 @@
     - 确保单条分类在 200ms 内完成
     - _需求: 2.1-2.6_
 
-  - [ ] 4.2 创建 services/tagger.py 实现 TagGenerator 类
+  - [x] 4.2 创建 services/tagger.py 实现 TagGenerator 类
     - 定义 PREDEFINED_TAGS 常量（10 个预定义标签）
     - 实现 generate_tags 方法，为单条 ProductUpdate 生成标签
     - 实现 generate_tags_batch 方法，批量生成标签
@@ -66,7 +66,7 @@
     - 限制返回最多 5 个标签
     - _需求: 3.1-3.6_
 
-  - [ ] 4.3 创建 services/summarizer.py 实现 SummaryGenerator 类
+  - [x] 4.3 创建 services/summarizer.py 实现 SummaryGenerator 类
     - 实现 generate_summary 方法，为单条 ProductUpdate 生成摘要
     - 实现 generate_summaries_batch 方法，批量生成摘要
     - 仅对 content 长度超过 500 字符的记录调用 LLM
@@ -74,18 +74,18 @@
     - 调用 LLMAnalyzer.generate_summary，更新 ProductUpdate.summary 字段
     - _需求: 4.1-4.5_
 
-  - [ ]* 4.4 为分析服务编写单元测试
+  - [x] 4.4 为分析服务编写单元测试
     - 测试 ContentClassifier 的分类逻辑和降级策略
     - 测试 TagGenerator 的标签生成和数量限制
     - 测试 SummaryGenerator 的长度判断和摘要生成
     - 使用 Mock LLMAnalyzer 验证调用参数
     - _需求: 2.6, 3.5, 4.4_
 
-- [ ] 5. 检查点 - 确保核心分析服务正常工作
+- [x] 5. 检查点 - 确保核心分析服务正常工作
   - 确保所有测试通过，如有问题请询问用户
 
-- [ ] 6. 实现趋势分析和报告生成
-  - [ ] 6.1 创建 services/trend_analyzer.py 实现 TrendAnalyzer 类
+- [-] 6. 实现趋势分析和报告生成
+  - [x] 6.1 创建 services/trend_analyzer.py 实现 TrendAnalyzer 类
     - 实现 analyze_trends 方法，分析过去 30 天的 ProductUpdate 记录
     - 调用 LLMAnalyzer.analyze_trends 识别相似主题的内容组
     - 为每个趋势组生成描述性标题和统计信息
@@ -94,7 +94,7 @@
     - 实现 get_trending_tags 方法，统计热门标签
     - _需求: 5.1-5.7_
 
-  - [ ] 6.2 创建 services/report_generator.py 实现 ReportGenerator 类
+  - [-] 6.2 创建 services/report_generator.py 实现 ReportGenerator 类
     - 实现 generate_weekly_report 方法，分析过去 7 天的更新
     - 生成结构化周报，包含：重点更新、分类统计、竞品对比、趋势洞察
     - 按产品分组展示统计，识别最活跃产品和最热门类别
@@ -111,7 +111,7 @@
     - 测试空数据场景
     - _需求: 5.7, 6.7_
 
-- [ ] 7. 实现健康监控服务
+- [~] 7. 实现健康监控服务
   - [ ] 7.1 创建 services/health_monitor.py 实现 HealthMonitor 类
     - 实现 record_success 方法，记录数据源采集成功
     - 实现 record_failure 方法，记录数据源采集失败

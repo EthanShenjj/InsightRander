@@ -1,0 +1,17 @@
+flask
+flask-sqlalchemy
+psycopg2-binary
+requests
+feedparser
+beautifulsoup4
+python-dotenv
+marshmallow
+apscheduler
+pygithub
+openai
+flask-cors
+
+# Test dependencies
+pytest
+pytest-mock
+pytest-cov

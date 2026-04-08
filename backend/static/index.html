@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Permissions-Policy" content="unload=()">
+    <title>InsightRadar | 竞品情报监控系统</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="theme-light">
+    <div class="glass-bg"></div>
+    
+    <div class="app-layout">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <div class="logo-icon-container">
+                        <i data-lucide="satellite" class="logo-icon"></i>
+                    </div>
+                    <h1>InsightRadar</h1>
+                </div>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-item active" data-view="updates">
+                    <i data-lucide="layout-dashboard"></i>
+                    <span data-i18n="nav_updates">动态追踪</span>
+                </a>
+                <a href="#" class="nav-item" data-view="trends">
+                    <i data-lucide="trending-up"></i>
+                    <span data-i18n="nav_trends">趋势分析</span>
+                </a>
+                <a href="#" class="nav-item" data-view="reports">
+                    <i data-lucide="file-text"></i>
+                    <span data-i18n="nav_reports">每周简报</span>
+                </a>
+                <a href="#" class="nav-item" data-view="health">
+                    <i data-lucide="heart-pulse"></i>
+                    <span data-i18n="nav_health">数据源状态</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="status-badge" id="app-status">
+                    <span class="pulse-dot"></span>
+                    <span data-i18n="status_online">系统在线</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <header class="top-bar">
+                <div class="search-container">
+                    <i data-lucide="search" class="search-icon"></i>
+                    <input type="text" id="global-search" data-i18n-placeholder="search_placeholder" placeholder="搜索动态、标签、产品...">
+                </div>
+                <div class="top-actions">
+                    <button id="batch-delete-btn" class="btn btn-secondary" style="display: none; color: var(--accent-red); border-color: var(--accent-red); background: rgba(239, 68, 68, 0.1);">
+                        <i data-lucide="trash-2"></i>
+                        <span data-i18n="btn_batch_delete">批量删除</span>
+                    </button>
+                    <button id="lang-toggle" class="theme-toggle" title="Switch Language">
+                        <span id="lang-text" style="font-size: 0.75rem; font-weight: 700;">EN</span>
+                    </button>
+                    <button id="theme-toggle" class="theme-toggle" title="Toggle Theme">
+                        <i data-lucide="sun" id="theme-icon"></i>
+                    </button>
+                    <button id="refresh-btn" class="btn btn-primary">
+                        <i data-lucide="refresh-cw" class="icon"></i>
+                        <span data-i18n="btn_scan">采集数据</span>
+                    </button>
+                </div>
+            </header>
+
+            <div id="view-container" class="view-container">
+                <!-- Views will be injected here -->
+                <section id="updates-view" class="view active">
+                    <header class="view-header">
+                        <div class="header-info">
+                            <h2 data-i18n="feed_title">竞品情报追踪</h2>
+                            <p data-i18n="feed_subtitle">实时监控市场领导者的最新动态。</p>
+                        </div>
+                        <div class="view-filters">
+                            <div class="filter-group">
+                                <label data-i18n="filter_date">日期范围</label>
+                                <select id="date-range-filter" class="select-glass">
+                                    <option value="all" data-i18n="date_all">全部时间</option>
+                                    <option value="7" data-i18n="date_7">近 7 天</option>
+                                    <option value="30" selected data-i18n="date_30">近 30 天</option>
+                                    <option value="90" data-i18n="date_90">近 90 天</option>
+                                    <option value="custom" data-i18n="date_custom">自定义范围</option>
+                                </select>
+                            </div>
+                            <div id="custom-date-range" class="custom-date-range" style="display: none;">
+                                <input type="date" id="start-date" class="date-input">
+                                <input type="date" id="end-date" class="date-input">
+                            </div>
+                            <div class="filter-group">
+                                <label data-i18n="filter_product">产品名称</label>
+                                <select id="product-filter" class="select-glass">
+                                    <option value="" data-i18n="product_all">所有产品</option>
+                                    <option value="PostHog">PostHog</option>
+                                    <option value="Mixpanel">Mixpanel</option>
+                                    <option value="Amplitude">Amplitude</option>
+                                    <option value="神策数据" data-i18n="product_sensors">神策数据</option>
+                                </select>
+                            </div>
+                            <div class="filter-group">
+                                <label data-i18n="filter_type">情报类型</label>
+                                <select id="type-filter" class="select-glass">
+                                    <option value="" data-i18n="type_all">所有类型</option>
+                                    <option value="feature" data-i18n="type_feature">功能发布</option>
+                                    <option value="blog" data-i18n="type_blog">博客文章</option>
+                                    <option value="github" data-i18n="type_github">GitHub 动态</option>
+                                </select>
+                            </div>
+                        </div>
+                    </header>
+
+                    <div id="updates-feed" class="updates-grid">
+                        <div class="loading-state">
+                            <div class="spinner"></div>
+                            <p data-i18n="loading_insights">正在加载最新洞察...</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="trends-view" class="view">
+                    <div class="placeholder-state">
+                        <i data-lucide="trending-up" class="placeholder-icon"></i>
+                        <h3 data-i18n="trends_coming_soon">趋势分析即将上线</h3>
+                        <p data-i18n="trends_desc">识别竞品格局中的模式和热点区域。</p>
+                    </div>
+                </section>
+
+                <section id="reports-view" class="view">
+                    <div class="placeholder-state">
+                        <i data-lucide="file-text" class="placeholder-icon"></i>
+                        <h3 data-i18n="reports_coming_soon">每周简报即将上线</h3>
+                        <p data-i18n="reports_desc">自动化总结和竞品情报报告。</p>
+                    </div>
+                </section>
+
+                <section id="health-view" class="view">
+                    <div class="placeholder-state">
+                        <i data-lucide="heart-pulse" class="placeholder-icon"></i>
+                        <h3 data-i18n="health_coming_soon">数据源状态即将上线</h3>
+                        <p data-i18n="health_desc">监控竞品数据源的状态和可靠性。</p>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal for Detail View -->
+    <div id="modal" class="modal">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content glass-card">
+            <header class="modal-header">
+                <div id="modal-badge-container"></div>
+                <button class="close-btn"><i data-lucide="x"></i></button>
+            </header>
+            <div id="modal-body"></div>
+            <footer class="modal-footer">
+                <a id="modal-source-link" href="#" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">
+                    <i data-lucide="external-link"></i> <span data-i18n="btn_view_source">查看原始出处</span>
+                </a>
+            </footer>
+        </div>
+    </div>
+
+    <!-- Modal for Collection Settings -->
+    <div id="collect-modal" class="modal">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content glass-card" style="max-width: 500px;">
+            <header class="modal-header">
+                <h3 data-i18n="collect_settings_title">采集任务配置</h3>
+                <button class="close-btn" id="close-collect-modal"><i data-lucide="x"></i></button>
+            </header>
+            <div class="modal-body" style="padding: 2rem;">
+                <div class="filter-group" style="margin-bottom: 2rem;">
+                    <label data-i18n="filter_date" style="display: block; margin-bottom: 0.75rem;">日期范围</label>
+                    <select id="collect-days" class="select-glass" style="width: 100%;">
+                        <option value="1" data-i18n="date_1">最近 24 小时</option>
+                        <option value="7" data-i18n="date_7">近 7 天</option>
+                        <option value="30" selected data-i18n="date_30">近 30 天</option>
+                        <option value="90" data-i18n="date_90">近 90 天</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label data-i18n="filter_product" style="display: block; margin-bottom: 0.75rem;">选择平台</label>
+                    <div class="platform-checkboxes" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <label class="checkbox-container">
+                            <input type="checkbox" value="PostHog" checked class="platform-check">
+                            <span class="checkmark"></span> PostHog
+                        </label>
+                        <label class="checkbox-container">
+                            <input type="checkbox" value="Mixpanel" checked class="platform-check">
+                            <span class="checkmark"></span> Mixpanel
+                        </label>
+                        <label class="checkbox-container">
+                            <input type="checkbox" value="Amplitude" checked class="platform-check">
+                            <span class="checkmark"></span> Amplitude
+                        </label>
+                        <label class="checkbox-container">
+                            <input type="checkbox" value="神策数据" checked class="platform-check">
+                            <span class="checkmark"></span> <span data-i18n="product_sensors">神策数据</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <footer class="modal-footer">
+                <button id="start-collect-btn" class="btn btn-primary" style="width: 100%; justify-content: center;">
+                    <i data-lucide="play"></i> <span data-i18n="btn_start_scan">开始采集任务</span>
+                </button>
+            </footer>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+    </script>
+    <!-- Modal for Deletion Confirmation -->
+    <div id="confirm-modal" class="modal">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content glass-card" style="max-width: 400px; text-align: center;">
+            <div class="modal-body" style="padding: 2.5rem 2rem;">
+                <div class="alert-icon" style="margin-bottom: 1.5rem; color: var(--accent-red);">
+                    <i data-lucide="alert-triangle" style="width: 48px; height: 48px; margin: 0 auto;"></i>
+                </div>
+                <h3 id="confirm-title" style="margin-bottom: 0.75rem; font-size: 1.25rem;">确认删除？</h3>
+                <p id="confirm-message" style="color: var(--text-dim); margin-bottom: 2rem;">此操作无法撤销，确定要删除选中的记录吗？</p>
+                <div style="display: flex; gap: 1rem;">
+                    <button id="confirm-cancel-btn" class="btn btn-secondary" style="flex: 1; justify-content: center;" data-i18n="btn_cancel">取消</button>
+                    <button id="confirm-ok-btn" class="btn btn-primary" style="flex: 1; justify-content: center; background: var(--accent-red); box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);" data-i18n="btn_confirm">确认删除</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
